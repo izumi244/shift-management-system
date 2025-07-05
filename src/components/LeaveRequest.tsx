@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { supabase } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
+import { Calendar, X, Plus, Heart, Sparkles, Clock } from 'lucide-react'
 
 interface LeaveRequestData {
   id: string
@@ -147,78 +148,128 @@ export default function LeaveRequest({ session }: LeaveRequestProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl">カレンダーを読み込み中...</div>
+      <div className="min-h-screen flex items-center justify-center p-8">
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
+          <div className="flex items-center space-x-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            <span className="text-white text-xl font-medium">カレンダーを読み込み中...</span>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">休み希望申請</h1>
-            <p className="mt-1 text-sm text-gray-600">
-              カレンダーの日付をクリックして休み希望を申請してください
-            </p>
-          </div>
-
-          {message && (
-            <div className={`mx-6 mt-4 p-3 rounded ${
-              message.includes('成功') || message.includes('申請しました') || message.includes('削除しました')
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            }`}>
-              {message}
-            </div>
-          )}
-
-          <div className="p-6">
-            <div className="mb-4 flex flex-wrap gap-2 text-sm">
-              <div className="flex items-center">
-                <div className="w-4 h-4 bg-red-500 rounded mr-2"></div>
-                <span>休み希望</span>
+    <div className="min-h-screen p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* ヘッダーカード */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+          <div className="p-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="h-14 w-14 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl flex items-center justify-center shadow-xl">
+                <Sparkles className="h-8 w-8 text-white" />
               </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 bg-gray-300 rounded mr-2"></div>
-                <span>クリックで申請/削除</span>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                  休み希望申請
+                </h1>
+                <p className="text-white/70 text-lg">
+                  カレンダーの日付をクリックして休み希望を申請してください
+                </p>
               </div>
             </div>
 
-            <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              headerToolbar={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth'
-              }}
-              events={events}
-              dateClick={handleDateClick}
-              height="auto"
-              locale="ja"
-              firstDay={1} // 月曜日始まり
-              buttonText={{
-                today: '今日',
-                month: '月'
-              }}
-              dayMaxEvents={true}
-              moreLinkText="他"
-            />
-          </div>
-
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-600">
-                現在の休み希望: {events.length}件
+            {/* 統計情報 */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10">
+                <div className="flex items-center space-x-3">
+                  <Heart className="h-6 w-6 text-red-400" />
+                  <div>
+                    <p className="text-white/60 text-sm">現在の休み希望</p>
+                    <p className="text-white text-2xl font-bold">{events.length}件</p>
+                  </div>
+                </div>
               </div>
-              <button
-                onClick={() => window.history.back()}
-                className="bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
-                戻る
-              </button>
+              
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10">
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-6 w-6 text-blue-400" />
+                  <div>
+                    <p className="text-white/60 text-sm">今月の表示</p>
+                    <p className="text-white text-lg font-semibold">
+                      {new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10">
+                <div className="flex items-center space-x-3">
+                  <Clock className="h-6 w-6 text-green-400" />
+                  <div>
+                    <p className="text-white/60 text-sm">操作方法</p>
+                    <p className="text-white text-sm">日付クリックで申請/削除</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* メッセージ表示 */}
+            {message && (
+              <div className={`mt-6 p-4 rounded-2xl backdrop-blur-lg border ${
+                message.includes('成功') || message.includes('申請しました') || message.includes('削除しました')
+                  ? 'bg-green-500/20 border-green-400/30 text-green-100'
+                  : 'bg-red-500/20 border-red-400/30 text-red-100'
+              }`}>
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="h-5 w-5" />
+                  <span className="font-medium">{message}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 凡例カード */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl p-6">
+          <h3 className="text-white text-lg font-semibold mb-4">カレンダー凡例</h3>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-red-500 rounded-full shadow-lg"></div>
+              <span className="text-white/80">休み希望</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-white/20 rounded-full border border-white/40"></div>
+              <span className="text-white/80">クリックで申請/削除</span>
+            </div>
+          </div>
+        </div>
+
+        {/* カレンダーカード */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+          <div className="p-8">
+            <div className="bg-white/90 rounded-2xl p-6 shadow-xl">
+              <FullCalendar
+                plugins={[dayGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                headerToolbar={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth'
+                }}
+                events={events}
+                dateClick={handleDateClick}
+                height="auto"
+                locale="ja"
+                firstDay={1} // 月曜日始まり
+                buttonText={{
+                  today: '今日',
+                  month: '月'
+                }}
+                dayMaxEvents={true}
+                moreLinkText="他"
+                eventClassNames="rounded-lg shadow-sm"
+              />
             </div>
           </div>
         </div>
@@ -226,50 +277,75 @@ export default function LeaveRequest({ session }: LeaveRequestProps) {
 
       {/* 休み希望申請モーダル */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">
-                休み希望申請
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                {new Date(selectedDate).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  weekday: 'long'
-                })}
-              </p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-md w-full border border-white/20">
+            {/* モーダルヘッダー */}
+            <div className="p-8 border-b border-gray-200/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <Plus className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      休み希望申請
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      {new Date(selectedDate).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'long'
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-colors duration-200"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
             </div>
 
-            <div className="px-6 py-4">
-              <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+            {/* モーダルコンテンツ */}
+            <div className="p-8">
+              <label htmlFor="reason" className="block text-sm font-semibold text-gray-700 mb-3">
                 理由（任意）
               </label>
               <textarea
                 id="reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                rows={3}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                rows={4}
+                className="block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
                 placeholder="例：私用、通院、家族の用事など"
               />
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+            {/* モーダルフッター */}
+            <div className="p-8 bg-gray-50/80 border-t border-gray-200/50 flex justify-end space-x-4">
               <button
                 onClick={() => setShowModal(false)}
                 disabled={submitting}
-                className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-2xl hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 transition-all duration-200 font-medium"
               >
                 キャンセル
               </button>
               <button
                 onClick={submitLeaveRequest}
                 disabled={submitting}
-                className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-200 font-medium shadow-lg"
               >
-                {submitting ? '申請中...' : '申請する'}
+                {submitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>申請中...</span>
+                  </div>
+                ) : (
+                  '申請する'
+                )}
               </button>
             </div>
           </div>
