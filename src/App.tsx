@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import type { Session } from '@supabase/supabase-js'
-import { User, Calendar, Users, Settings, LogOut, Sparkles } from 'lucide-react'
+import { User, Calendar, Users, LogOut, Sparkles } from 'lucide-react'
 import Login from './components/Login'
 import Profile from './components/Profile'
 import LeaveRequest from './components/LeaveRequest'

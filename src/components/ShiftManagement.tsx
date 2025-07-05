@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { supabase } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
-import { Calendar, Users, Settings, Trash2, Edit3, Save, X, AlertTriangle, CheckCircle, Clock, UserX, Plus, Download, FileSpreadsheet } from 'lucide-react'
+import { Calendar, Users, Trash2, Edit3, Save, X, AlertTriangle, CheckCircle, Clock, UserX, Plus, FileSpreadsheet } from 'lucide-react'
 import * as XLSX from 'xlsx'
 
 interface Staff {
@@ -52,7 +52,7 @@ interface ShiftManagementProps {
   session: Session
 }
 
-export default function ShiftManagement({ session }: ShiftManagementProps) {
+export default function ShiftManagement({ session: _session }: ShiftManagementProps) {
   const [staff, setStaff] = useState<Staff[]>([])
   const [shiftPatterns, setShiftPatterns] = useState<ShiftPattern[]>([])
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([])
@@ -230,7 +230,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
   }
 
   // 制約チェック機能
-  const checkConstraints = (date: string, userId: string, patternId: string, excludeShiftId?: string) => {
+  const checkConstraints = (date: string, userId: string, _patternId: string, excludeShiftId?: string) => {
     const newWarnings: string[] = []
 
     // 休み希望チェック
@@ -688,7 +688,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/10">
                 <div className="flex items-center space-x-3">
-                  <Settings className="h-6 w-6 text-blue-400" />
+                  <Calendar className="h-6 w-6 text-blue-400" />
                   <div>
                     <p className="text-white font-semibold">自動生成</p>
                     <p className="text-white/60 text-sm">休み希望を考慮して自動作成</p>
@@ -788,7 +788,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <Settings className="h-5 w-5" />
+                      <Calendar className="h-5 w-5" />
                       <span>シフト自動生成</span>
                     </div>
                   )}
@@ -966,7 +966,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
                   value={editFormData.user_id}
                   onChange={(e) => {
                     setEditFormData(prev => ({ ...prev, user_id: e.target.value }))
-                    checkConstraints(editFormData.shift_date, e.target.value, editFormData.pattern_id, editingShift.id)
+                    checkConstraints(editFormData.shift_date, e.target.value, editFormData.pattern_id, editingShift?.id)
                   }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
                 >
@@ -985,7 +985,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
                   value={editFormData.pattern_id}
                   onChange={(e) => {
                     setEditFormData(prev => ({ ...prev, pattern_id: e.target.value }))
-                    checkConstraints(editFormData.shift_date, editFormData.user_id, e.target.value, editingShift.id)
+                    checkConstraints(editFormData.shift_date, editFormData.user_id, e.target.value, editingShift?.id)
                   }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white transition-all duration-200"
                 >
@@ -1005,7 +1005,7 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
                   value={editFormData.shift_date}
                   onChange={(e) => {
                     setEditFormData(prev => ({ ...prev, shift_date: e.target.value }))
-                    checkConstraints(e.target.value, editFormData.user_id, editFormData.pattern_id, editingShift.id)
+                    checkConstraints(e.target.value, editFormData.user_id, editFormData.pattern_id, editingShift?.id)
                   }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-all duration-200"
                 />
