@@ -287,16 +287,13 @@ export default function Profile({ session }: ProfileProps) {
                   <span className="text-red-400">*</span>
                 </label>
                 <select
-                  {...register('role', { required: '役職は必須です' })}
-                  className="w-full px-6 py-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 transition-all duration-200"
-                >
-                  <option value="">選択してください</option>
-                  <option value="看護師">看護師</option>
-                  <option value="主任看護師">主任看護師</option>
-                  <option value="看護師長">看護師長</option>
-                  <option value="院長">院長</option>
-                  <option value="事務">事務</option>
-                </select>
+  {...register('role', { required: '役職は必須です' })}
+  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+>
+  <option value="">選択してください</option>
+  <option value="常勤">常勤</option>
+  <option value="パート">パート</option>
+</select>
                 {errors.role && (
                   <p className="text-red-400 text-sm flex items-center space-x-1">
                     <AlertCircle className="h-4 w-4" />
