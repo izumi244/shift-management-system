@@ -554,7 +554,6 @@ export default function ShiftManagement({ session }: ShiftManagementProps) {
     data.unshift([`${year}年${month}月 シフト表`, '', '', '', '', '', '', ''])
 
     let currentWeek = ['', '', '', '', '', '', '', '']
-    let dateCounter = 1
 
     // 月の最初の週の空白を埋める
     for (let i = 0; i < adjustedFirstDay; i++) {
